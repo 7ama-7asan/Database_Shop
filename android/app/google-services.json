@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "850386387843",
+    "project_id": "g-t-c-d064c",
+    "storage_bucket": "g-t-c-d064c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:850386387843:android:9d921ef4f1e060266dacb6",
+        "android_client_info": {
+          "package_name": "com.gtc.database"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "850386387843-4u8079omgtjvvdsludlunc4mo2ls0hod.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAisigdDqS_kd7Pu4YUPzA4nHUsJCR2gIU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "850386387843-4u8079omgtjvvdsludlunc4mo2ls0hod.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
