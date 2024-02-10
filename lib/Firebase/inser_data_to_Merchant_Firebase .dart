@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 class inser_data_to_merchant_Firebase {
   var firefirestore = FirebaseFirestore.instance;
   var _user = FirebaseAuth.instance.currentUser;
-  Future<void> insertMerchant(String name, String type, String brand,
-      String priceSell, String priceBuy) async {
+  Future<void> insertMerchant(
+      String name, String type, String city, String number, String id) async {
     await firefirestore
         .collection('users')
         .doc(_user!.email.toString())
@@ -13,9 +13,9 @@ class inser_data_to_merchant_Firebase {
         .add({
       'name': name,
       'type': type,
-      'brand': brand,
-      'price_sell': priceSell,
-      'price_buy': priceBuy,
+      'city': city,
+      'number': number,
+      'id': id,
     });
   }
 }

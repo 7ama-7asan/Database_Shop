@@ -3,10 +3,12 @@ import 'package:database/Components/ShowDialoge.dart';
 import 'package:database/Firebase/inser_data_to_Merchant_Firebase%20.dart';
 import 'package:database/Firebase/inser_data_to_items_Firebase.dart';
 import 'package:database/Models/Getting_Items_firebase.dart';
+import 'package:database/Models/model_trader.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 
+//test
 class Trader extends StatefulWidget {
   const Trader({Key? key}) : super(key: key);
 
@@ -17,9 +19,9 @@ class Trader extends StatefulWidget {
 class _ItemsState extends State<Trader> {
   final TextEditingController _name = TextEditingController();
   final TextEditingController _type = TextEditingController();
-  final TextEditingController _brand = TextEditingController();
-  final TextEditingController _priceSell = TextEditingController();
-  final TextEditingController _priceBuy = TextEditingController();
+  final TextEditingController _city = TextEditingController();
+  final TextEditingController _number = TextEditingController();
+  final TextEditingController _id = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +36,11 @@ class _ItemsState extends State<Trader> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildTextField(_name, 'merchant Name'),
-              _buildTextField(_type, 'merchant Type'),
-              _buildTextField(_brand, 'merchant city'),
-              _buildTextField(_priceSell, 'merchant number'),
-              _buildTextField(_priceBuy, 'id'),
+              _buildTextField(_name, 'trader Name'),
+              _buildTextField(_type, 'trader Type'),
+              _buildTextField(_city, 'trader city'),
+              _buildTextField(_number, 'trader number'),
+              _buildTextField(_id, 'id'),
               SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
@@ -80,19 +82,19 @@ class _ItemsState extends State<Trader> {
     // Use the controllers to get the data from the text fields
     String dataName = _name.text;
     String dataType = _type.text;
-    String dataBrand = _brand.text;
-    String dataPriceSell = _priceSell.text;
-    String dataPriceBuy = _priceBuy.text;
+    String dataCity = _city.text;
+    String dataNumber = _number.text;
+    String dataId = _id.text;
 
     // Perform the data insertion logic here
-    await inser_data_to_merchant_Firebase().insertMerchant(
-        dataName, dataType, dataBrand, dataPriceSell, dataPriceBuy);
+    await inser_data_to_merchant_Firebase()
+        .insertMerchant(dataName, dataType, dataCity, dataNumber, dataId);
     // Optionally, you can clear the text fields after inserting data
     _name.clear();
     _type.clear();
-    _brand.clear();
-    _priceSell.clear();
-    _priceBuy.clear();
+    _city.clear();
+    _number.clear();
+    _id.clear();
   }
 
   Widget ShowItemsRaport(_name) {
@@ -106,14 +108,10 @@ class _ItemsState extends State<Trader> {
       stream: collectionReference.snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) return Center(child: Text('Loading...'));
-        List<ItemsModel> _list = snapshot.data!.docs.map(
+        List<TraderModel> _list = snapshot.data!.docs.map(
           (dataModel) {
-            return ItemsModel(
-                dataModel['name'],
-                dataModel['type'],
-                dataModel['brand'],
-                dataModel['price_sell'],
-                dataModel['price_buy']);
+            return TraderModel(dataModel['name'], dataModel['type'],
+                dataModel['city'], dataModel['number'], dataModel['id']);
           },
         ).toList();
 
@@ -125,18 +123,18 @@ class _ItemsState extends State<Trader> {
                 columns: [
                   const DataColumn(label: Text('Name')),
                   DataColumn(label: Text('Type')),
-                  DataColumn(label: Text('Brand')),
-                  DataColumn(label: Text('Price_Sell')),
-                  DataColumn(label: Text('Price_Buy')),
+                  DataColumn(label: Text('city')),
+                  DataColumn(label: Text('number')),
+                  DataColumn(label: Text('id')),
                   DataColumn(label: Text('update')),
                 ],
                 rows: _list.map((data) {
                   return DataRow(cells: [
                     DataCell(Text(data.name)),
                     DataCell(Text(data.type)),
-                    DataCell(Text(data.brand)),
-                    DataCell(Text(data.price_sell)),
-                    DataCell(Text(data.Price_buy)),
+                    DataCell(Text(data.city)),
+                    DataCell(Text(data.number.toString())),
+                    DataCell(Text(data.id.toString())),
                     DataCell(
                         onTap: () {}, showEditIcon: true, Icon(Icons.update)),
                   ]);
@@ -153,14 +151,13 @@ Future<void> UpdateItems(
   data,
   TextEditingController nameController,
   TextEditingController typeController,
-  TextEditingController brandController,
-  TextEditingController price_sellController,
-  TextEditingController price_buyController,
+  TextEditingController cityController,
+  TextEditingController numberController,
 ) async {
   nameController.text = data.name; // Set the initial value
-  brandController.text = data.brand; // Set the initial value
-  price_sellController.text = data.price_sell; // Set the initial value
-  price_buyController.text = data.price.buy; // Set the initial value
+  typeController.text = data.brand; // Set the initial value
+  cityController.text = data.price_sell; // Set the initial value
+  numberController.text = data.price.buy; // Set the initial value
 
   showDialog(
     context: context,
@@ -174,18 +171,18 @@ Future<void> UpdateItems(
           ),
           Text('Current brand: ${data.name}'),
           TextField(
-            controller: brandController,
-            decoration: InputDecoration(labelText: 'New Name'),
+            controller: typeController,
+            decoration: InputDecoration(labelText: 'New type'),
           ),
           Text('Current price_sell: ${data.type}'),
           TextField(
-            controller: price_sellController,
-            decoration: InputDecoration(labelText: 'New Name'),
+            controller: cityController,
+            decoration: InputDecoration(labelText: 'New city'),
           ),
           Text('Current price buy: ${data.brand}'),
           TextField(
-            controller: price_buyController,
-            decoration: InputDecoration(labelText: 'New Name'),
+            controller: numberController,
+            decoration: InputDecoration(labelText: 'New number'),
           ),
         ],
       ),
@@ -205,9 +202,9 @@ Future<void> UpdateItems(
                 .doc(data.id.toString())
                 .update({
               'name': nameController.text,
-              'brand': brandController.text,
-              'price_sell': price_sellController.text,
-              'price_buy': price_buyController.text,
+              'type': typeController.text,
+              'city': cityController.text,
+              'number': numberController.text,
             });
             Navigator.of(context).pop();
           },
